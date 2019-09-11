@@ -13,14 +13,11 @@ public class CryptoKeyFactory {
     /** Use AWS credentials to obtain a KMS Provider
      * We use this + our pubKey for encryption and decryption
      */
-    public KmsMasterKeyProvider getMasterKeyProvider() {
-        // Currently, this is setup to look for AWS_ACCESS_ID_KEY and AWS_SECRET_ACCESS_KEY from the env.
-        // In production, we might aim to have these env variables be set through VAULT or Amazon EC2
-        // instance profiles. The key has also been hard-coded in here which won't be the case.
-        AWSCredentialsProvider creds = new DefaultAWSCredentialsProviderChain(); // IAM user creds
-        String keyId = "f74681da-d1d7-4c06-a412-4da7d3b79e9d";  // obtained through KMS
-        Region region = new Region(new InMemoryRegionImpl("us-east-2", "domain")); // = Ohio
+    public KmsMasterKeyProvider getMasterKeyProvider() {  // TODO: see dev.env
+        AWSCredentialsProvider creds = new DefaultAWSCredentialsProviderChain();
+        Region region = new Region(new InMemoryRegionImpl(System.getenv("AWS_REGION"), "domain"));
         ClientConfiguration clientConfig = new ClientConfiguration();
+        String keyId = System.getenv("KMS_KEY_ID");
         return new KmsMasterKeyProvider(creds, region, clientConfig, keyId);
     }
 
@@ -37,14 +34,6 @@ public class CryptoKeyFactory {
             System.exit(1);
         }
         return null;
-    }
-
-    /** Should have have our keys in byte streams already, we can decode them to a KeyPair here */
-    public KeyPair decodeKeys(byte[] privKeyBits,byte[] pubKeyBits) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        KeyFactory keyFactory= KeyFactory.getInstance("RSA");
-        PrivateKey privKey=keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privKeyBits));
-        PublicKey pubKey=keyFactory.generatePublic(new X509EncodedKeySpec(pubKeyBits));
-        return new KeyPair(pubKey,privKey);
     }
 }
 

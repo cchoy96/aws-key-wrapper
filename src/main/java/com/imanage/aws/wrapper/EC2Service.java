@@ -10,6 +10,7 @@ public class EC2Service {
     public RunInstancesRequest getInstance() {
         RunInstancesRequest request =  new RunInstancesRequest();
 
+        // TODO
         request.withImageId("ami-a9d09ed1") // Amazon Machine Image ID
                 .withInstanceType(InstanceType.T1Micro) // instance type compatible with the AMI
                 .withMinCount(1).withMaxCount(1)
