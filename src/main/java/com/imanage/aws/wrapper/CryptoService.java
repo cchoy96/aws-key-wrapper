@@ -10,11 +10,11 @@ import java.security.*;
 public class CryptoService {
     private static PublicKey publicEscrowKey;
     private static PrivateKey privateEscrowKey;
-    private final KeyFactory keyFactory;
+    private final CryptoKeyFactory keyFactory;
 
     public CryptoService() {
-        keyFactory = new KeyFactory();
-        KeyPair pair = keyFactory.generateRandomKeyPair();
+        keyFactory = new CryptoKeyFactory();
+        KeyPair pair = keyFactory.generateEscrowKeyPair();
         publicEscrowKey = pair.getPublic();
         privateEscrowKey = pair.getPrivate();
     }
@@ -29,8 +29,8 @@ public class CryptoService {
         final KmsMasterKeyProvider kms = keyFactory.getMasterKeyProvider();
 
         // Generate key provider factory using public key
-        final JceMasterKey escrowPub = JceMasterKey.getInstance(publicEscrowKey, null, "Escrow", "Escrow",
-                "RSA/ECB/OAEPWithSHA-512AndMGF1Padding");
+        final JceMasterKey escrowPub = JceMasterKey.getInstance(publicEscrowKey, null,
+                "Escrow", "Escrow", "RSA/ECB/OAEPWithSHA-512AndMGF1Padding");
         final MasterKeyProvider<?> provider = MultipleProviderFactory.buildMultiProvider(kms, escrowPub);
 
         // Encrypt the data

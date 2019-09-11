@@ -5,7 +5,7 @@ import java.util.*;
 public class Application {
 
     public static void main(final String[] args) {
-        byte[] data = "sampleDatatoEncrypt".getBytes();
+        byte[] data = "SomeOtherKeyToWrapInEncryption".getBytes();
 
         CryptoService cs = new CryptoService();
 
