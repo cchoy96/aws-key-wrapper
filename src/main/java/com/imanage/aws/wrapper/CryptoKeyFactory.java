@@ -6,7 +6,6 @@ import com.amazonaws.encryptionsdk.kms.*;
 import com.amazonaws.regions.*;
 
 import java.security.*;
-import java.security.spec.*;
 
 public class CryptoKeyFactory {
 
